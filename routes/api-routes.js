@@ -27,7 +27,29 @@ module.exports = function (app) {
             .catch(err => {
                 res.status(400).json(err);
             })
-    })
+    });
 
     //then add next API route! createWorkout (post request) and mongoose method is create or save
+    app.post("/api/workouts", ({ body }, res) =>
+        db.Workout.create(body)
+            .then(dbWorkout => {
+                res.json(dbWorkout);
+            })
+            .catch(err => {
+                res.status(400).json(err);
+            }));
+
+
+    //add the getWorkoutsinRange route, which is a get route
+    app.get("/api/workouts/range", (req, res) => {
+        db.Workout.find({})
+            .sort({ date: -1 })
+            .then(dbWorkout => {
+                res.json(dbWorkout);
+            })
+            .catch(err => {
+                res.status(400).json(err);
+            });
+    })
+
 }
