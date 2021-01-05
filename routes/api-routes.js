@@ -15,11 +15,10 @@ module.exports = function (app) {
             });
     });
 
-    //just need to add to the exercises key, bc right now it's returning the previous exercise
     app.put("/api/workouts/:id", (req, res) => {
         const filter = { _id: req.params.id };
         const update = { $push: { exercises: req.body } };
-        db.Workout.findOneAndUpdate(filter, update)
+        db.Workout.findOneAndUpdate(filter, update, { new: true })
             .then(dbWorkout => {
                 console.log(dbWorkout);
                 res.json(dbWorkout);
@@ -29,7 +28,6 @@ module.exports = function (app) {
             })
     });
 
-    //then add next API route! createWorkout (post request) and mongoose method is create or save
     app.post("/api/workouts", ({ body }, res) =>
         db.Workout.create(body)
             .then(dbWorkout => {
@@ -40,7 +38,6 @@ module.exports = function (app) {
             }));
 
 
-    //add the getWorkoutsinRange route, which is a get route
     app.get("/api/workouts/range", (req, res) => {
         db.Workout.find({})
             .sort({ date: -1 })
@@ -51,5 +48,7 @@ module.exports = function (app) {
                 res.status(400).json(err);
             });
     })
+
+    //add a route here for db.Workout.aggregate!
 
 }
