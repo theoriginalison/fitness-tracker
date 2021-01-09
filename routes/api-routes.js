@@ -5,14 +5,20 @@ module.exports = function (app) {
 
     app.get("/api/workouts", (req, res) => {
         console.log("message");
-        db.Workout.find({})
+        db.Workout.aggregate([{
+            $addFields: {
+                totalDuration: { $sum: "$exercises.duration" }
+            }
+        }])
             .sort({ date: -1 })
             .then(dbWorkout => {
                 res.json(dbWorkout);
             })
+
             .catch(err => {
                 res.status(400).json(err);
             });
+
     });
 
     app.put("/api/workouts/:id", (req, res) => {
@@ -39,8 +45,12 @@ module.exports = function (app) {
 
 
     app.get("/api/workouts/range", (req, res) => {
-        db.Workout.find({})
-            .sort({ date: -1 })
+        db.Workout.aggregate([{
+            $addFields: {
+                totalDuration: { $sum: "$exercises.duration" }
+            }
+        }])
+            .sort({ date: -1 }).limit(7)
             .then(dbWorkout => {
                 res.json(dbWorkout);
             })
@@ -48,7 +58,5 @@ module.exports = function (app) {
                 res.status(400).json(err);
             });
     })
-
-    //add a route here for db.Workout.aggregate!
 
 }
