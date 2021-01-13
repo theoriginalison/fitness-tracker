@@ -1,4 +1,4 @@
-# Take Note App
+# Fitness Tracker
 ![Badge for MIT](https://img.shields.io/badge/license-MIT-green)
 
 ## Description
